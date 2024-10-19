@@ -1,0 +1,133 @@
+Hello World!
+------------------------------------------------------------------------------
+This is a Python Tornado mock HTTP origin service.
+
+HTTP methods allowed:
+
+  GET HEAD OPTIONS POST
+
+  NOTE: OPTIONS returns a generally accepted set of OPTIONS response headers
+  without body content. Specific headers may be overridden using the `?header'
+  query parameter option.
+
+    ?header=Access-Allow-Origin:Some,Example,Values
+
+URL path endpoints:
+
+  .*/football.svg
+    Return a SVG file of a football instead of the default body content.
+
+  .*/hello_world
+    Return a "Hello, World!" response instead of the default body content.
+
+  .*/ping
+    Return a "pong" response instead of the default body content.
+
+  .*/help
+    Prepend the default body content with help content.
+
+  /.*
+    Return a text file with the details of the request.
+    This is the default body content.
+
+
+URL query parameter options:
+
+  ?content=<int>[&fill=<str>]
+    Generate lipsum-like random response body content with Content-Length
+    specified by the content integer value. The optional `fill' parameter may
+    be passed to provide a different regex pattern for the content. The `fill'
+    string defaults to the pattern: [a-zA-Z0-9 ]
+
+    ?content=1234 (Content-Length: 1234)
+
+  ?debug
+    Presence of the `debug' key with or without any value will set a "debug"
+    mode for the response which includes A LOT more information in the response
+    body content produced.
+
+  ?delay=<seconds float>
+    Delay the response to client for N seconds. The `X-Delay' response header
+    will be added when this option is used to help separate a true delay caused
+    by some other issue from a delay specifically introduced as requested
+
+    ?delay=10.5 (delay the response for 10.5 seconds)
+      Response headers will include `X-Delay: 10.5 set by query string'
+
+  ?encoding=<encoding[:q=0.99]>[,<encoding[:q=0.98]>[,...]]
+    Override the Accept-Encoding request header handling or force a specific
+    Content-Encoding without including the Accept-Encoding request header.
+
+    The encoding may be requested without the Accept-Encoding header. The
+    Accept-Encoding request header value is ignored when this option is used.
+    The value in the parameter takes the same values as Accept-Encoding.
+
+    ?encoding=gzip (return gzip)
+    ?encoding=identity (return identity)
+
+  ?header=<name>[:<value>][&header=...[&header=...]]
+    Set or clear a HTTP response header.
+
+    When a header <name> is followed with a colon and no <value>
+    (?header=example:&...) or simply no <value> (?header=example&...), the
+    header will be cleared from the response.
+
+    The ?header=<name>:<value> syntax is be used to set a response header to a
+    specific value. Multiple `header' key/value pairs may be passed.
+
+    ?header=x-wr-example:test&header=content-type:text/example
+    < X-WR-Example: test
+    < Content-Type: text/example
+
+    ?header=cache-control
+    ?header=cache-control:
+    (removes the default Cache-Control response header)
+
+  ?quiet
+    Presence of the `quite' key with or without any value will set a "quite"
+    mode which reduces the text included in the response body to just the HTTP
+    request and response headers.
+
+  ?set=<condition:value>[,<condition:value>],<match:value>
+    Set a condition to occur when a value matches.
+
+    Multiple `set' key/value pairs may be passed.
+
+    Configured condition keys:
+      delay:<seconds>
+      status:<code>
+
+    Configured match keys:
+      addr:<ip address> is used to match a requesting client IP address
+      host:<str> is used to match a specific Host header value
+
+    ?set=delay:3,status:599,addr:4.68.48.225
+    ?set=delay:4,status:699,host:my-host-value
+
+    NOTE: When a request contains the `Forwarded' request header, the client IP
+    address used in `addr' will come from the `for' attribute in the
+    `Forwarded' request header. A downstream proxy should be configured to set
+    this request header and attribute correctly.
+
+    The downstream proxy "should be" configured to pass the HTTP `Host' request
+    header with the client's requesting `Host' header.
+
+    Example: Delay the response for 3 seconds and return a HTTP 500 status code
+    when the requesting client "for" IP address matches 4.68.48.225
+
+    Forwarded: for="4.68.48.225";scheme=https;method=GET
+    ?set=delay:3,status=599,for=4.68.48.225
+
+  ?status=<int>[&reason=<str>]
+    Set the HTTP response status code.
+
+    NOTE: The `X-Status-Code' response header will be added when this option is
+    used to help separate a true HTTP error status code from an error status
+    set by this option.
+
+    ?status=204
+      Response headers will include `X-Status-Code: 204 set by query string'
+    ?status=607&reason=I'm+a+Weird+Status
+      Response headers will include `X-Status-Code: 607 set by query string'
+
+------------------------------------------------------------------------------

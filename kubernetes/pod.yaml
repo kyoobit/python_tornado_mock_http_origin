@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: tornado-mock-http-origin
+  namespace: mock-http-origin
+spec:
+  containers:
+    - name: tornado-mock-http-origin
+      image: ghcr.io/kyoobit/tornado-mock-http-origin:latest
+      args:
+        - --verbose
+      ports:
+        - containerPort: 8888
+          name: "mock-http-origin"
