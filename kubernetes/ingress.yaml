@@ -3,7 +3,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: tornado-mock-http-origin
-  namespace: mock-http-origin
+  namespace: mock-origin
 spec:
   rules:
     - host: tornado-mock-http-origin.microk8s.lab

@@ -6,7 +6,7 @@ metadata:
     app: tornado-mock-http-origin
     version: latest
   name: tornado-mock-http-origin
-  namespace: mock-http-origin
+  namespace: mock-origin
 spec:
   replicas: 3
   selector:
@@ -24,4 +24,4 @@ spec:
             - --verbose
           ports:
             - containerPort: 8888
-              name: "mock-http-origin"
+              name: "mock-origin"
