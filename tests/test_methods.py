@@ -20,7 +20,7 @@ class TestRepeaterHandlerMethods(tornado.testing.AsyncHTTPTestCase):
 
     def test_HTTP_method_DELETE(self):
         # Make the HTTP request
-        response = self.fetch("/", method="DELETE")
+        response = self.fetch("/", method="DELETE", timeout=3)
         # Check response code for the expected value
         self.assertEqual(response.code, 405)
 
