@@ -1,0 +1,16 @@
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: tornado-mock-http-origin
+  namespace: mock-origin
+spec:
+  entryPoints:
+  - web # :80
+  - websecure # :443
+  routes:
+  - match: Host(`tornado-mock-http-origin.200s.lab`)
+    kind: Rule
+    services:
+    - name: tornado-mock-http-origin
+      port: 8888
