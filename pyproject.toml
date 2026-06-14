@@ -1,0 +1,22 @@
+[project]
+name = "python-tornado-mock-http-origin"
+version = "0.1.0"
+description = "A mock HTTP origin."
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "tornado>=6.5.4",
+]
+
+[dependency-groups]
+dev = [
+    "bandit>=1.9.4",
+    "coverage>=7.13.5",
+    "pytest>=9.0.3",
+    "ruff>=0.15.10",
+    "tornado>=6.5.4",
+]
+
+[tool.bandit]
+#skips = ["B101"]
+exclude_dirs = ["tests", "venv"]

@@ -106,7 +106,7 @@ if __name__ == "__main__":
     # Not any arguments that may be passed but will be ignored
     if remaining_argv:
         logging.warning(
-            f'The following unknown arguments will be ignored: {", ".join(remaining_argv)}'
+            f"The following unknown arguments will be ignored: {', '.join(remaining_argv)}"
         )
 
     # Run the program

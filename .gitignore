@@ -1,5 +1,5 @@
 __pycache__
 *venv
+.coverage
 .DS_Store
-__pycache__
 .*_cache

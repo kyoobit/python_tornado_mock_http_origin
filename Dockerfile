@@ -1,26 +1,38 @@
 # podman build --tag tornado-mock-http-origin:v1 .
 # podman run --rm --interactive --tty --name mock-http-origin tornado-mock-http-origin:v1 /bin/sh
 # podman run --rm --detach --tty --publish 8889:8888/tcp --name mock-http-origin tornado-mock-http-origin:v1
-# Use a smaller image
-FROM docker.io/library/alpine:latest
+FROM docker.io/library/python:slim
 
-# Install the required Python modules
-RUN apk add python3 py3-tornado
+# Install system dependencies
+#RUN apt-get update && apt-get install -y \
+#    some-package \
+#    && rm -rf /var/lib/apt/lists/*
 
-# Add the Python file to be used
-RUN mkdir /mock_http_origin
-COPY app.py /mock_http_origin/app.py
-COPY cli.py /mock_http_origin/cli.py
-COPY football.svg /mock_http_origin/football.svg
-COPY help.txt /mock_http_origin/help.txt
+# Add the appuser account
+RUN adduser --disabled-password --disabled-login --no-create-home appuser
 
-# Add a user account
+# Set the working directory to /app
+WORKDIR /app
+
+# Install uv using the official installer
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
+
+# Add the Python files for the application
+COPY pyproject.toml uv.lock README.md src/* ./
+
+# Create additional directories and set permissions
+RUN mkdir -p /app/.cache && \
+    chown -R appuser:appuser /app
+
+# Set uv to use the .cache directory
+ENV UV_CACHE_DIR=/app/.cache/uv
+
+# Install Python dependencies
+RUN uv sync --frozen --no-cache
+
 # No need to run as root in the container
-RUN addgroup -S appgroup \
-    && adduser -S appuser -G appgroup
-
-# Run all future commands as appuser
 USER appuser
 
 # Set the command to run on start up
-ENTRYPOINT ["python3", "/mock_http_origin/cli.py"]
+ENTRYPOINT ["uv", "run",  "/app/cli.py"]
+#CMD ["--help"]
